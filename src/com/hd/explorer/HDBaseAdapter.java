@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,8 +117,9 @@ public class HDBaseAdapter extends BaseAdapter {
 		File f = this.getItem(position);
 		if(f != null){
 			int icon = this.getFileIcon(f);
+
 			if(icon == -1){
-				Drawable drawable = this.getApkIcon(f.getAbsolutePath());
+				Drawable drawable = this.getApkIcon(f.getAbsolutePath()); //耗时间
 				if(drawable != null){
 					holder.mfileIcon.setImageDrawable(drawable);
 				}
@@ -127,14 +129,24 @@ public class HDBaseAdapter extends BaseAdapter {
 			}else{
 				holder.mfileIcon.setImageResource(icon);
 			}
-			holder.mfileName.setText(f.getName());
+			//holder.mfileIcon.setImageResource(R.drawable.icon_file);
+			long start = System.currentTimeMillis();
+
+
+			holder.mfileName.setText(f.getName()); //耗时间
+
 			if(f.isFile()){
+
 				holder.mfileSize.setText(this.getFileSize(f.length()));
 			}else {
-				holder.mfileSize.setText("");
+				holder.mfileSize.setText(""); //耗时间
 
 			}
+			long end = System.currentTimeMillis();
+
+			Log.i("convertView","TIME: "+ String.valueOf((end - start)*0.001));
 			holder.mfileTime.setText(this.getFileTime(f.lastModified()));
+
 		}
 
 		return convertView;
@@ -202,7 +214,7 @@ public class HDBaseAdapter extends BaseAdapter {
 		df = null;
 
 		return mstrbuf.toString();
-	}
+	} 
 
 	class Holder{
 		ImageView mfileIcon;
